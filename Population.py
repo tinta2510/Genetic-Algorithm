@@ -28,7 +28,7 @@ def fitness(population):
     for chromosome in population:
         a = a1
         b = b1
-        map = map5.copy()
+        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]] #Khong tao duoc Copy cua map5
         result = []
         match = 0 #Do phu hop cua tung Chromosome
         distance = 0
@@ -78,18 +78,10 @@ def fitness(population):
                 if x==1: match += 1
                 if x==2: match += 2
         distance = abs(a0-a) + abs(b0-b)
-        result = [chromosome,match,distance]
+        result = [chromosome,match*2+distance]
         fitness_scores.append(result)
     return fitness_scores
 
 for i in range(len(fitness(population))) :
     print(fitness(population)[i])
-
-'''
-for y in range(len(map)-1,-1,-1):
-    for x in range(len(map[y])):
-        print(map[y][x],end=' | ')
-    print()
-print(result,"\n","\n","\n")
-'''
 
