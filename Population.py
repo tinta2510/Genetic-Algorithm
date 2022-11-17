@@ -13,7 +13,7 @@ move_list = ['r','l','u','d']
 
 chromosome_length = 20
 
-population_size = 5
+population_size = 10
 #Initial population
 population = []
 for i in range(population_size):
@@ -22,14 +22,13 @@ for i in range(population_size):
         chromosome.append(random.choice(move_list))
     population.append(chromosome)
 
-#Evaluation fitness
+#Evaluate fitness
 def fitness(population):
-    
-    a = a1
-    b = b1
     fitness_scores = []
     for chromosome in population:
-        map = map5
+        a = a1
+        b = b1
+        map = map5.copy()
         result = []
         match = 0 #Do phu hop cua tung Chromosome
         distance = 0
@@ -78,10 +77,13 @@ def fitness(population):
             for x in map[y]:
                 if x==1: match += 1
                 if x==2: match += 2
-        distance = (abs(a1-a) + abs(b1-b))/2
+        distance = abs(a0-a) + abs(b0-b)
         result = [chromosome,match,distance]
         fitness_scores.append(result)
     return fitness_scores
+
+for i in range(len(fitness(population))) :
+    print(fitness(population)[i])
 
 '''
 for y in range(len(map)-1,-1,-1):
