@@ -13,7 +13,8 @@ move_list = ['r','l','u','d']
 
 chromosome_length = 20
 
-population_size = 10
+population_size = 20
+parents_number = 10
 #Initial population
 population = []
 for i in range(population_size):
@@ -82,6 +83,13 @@ def fitness(population):
         fitness_scores.append(result)
     return fitness_scores
 
-for i in range(len(fitness(population))) :
-    print(fitness(population)[i])
+def select_parents(fitness_scores):
+    parents_list = []
+    for chromosome in sorted(fitness_scores,key = lambda x: x[1])[:parents_number]:
+        parents_list.append(chromosome[0])
+    return(parents_list)
+
+def crossover(parent1,parent2):
+    child = []
+    
 
