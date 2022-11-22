@@ -11,9 +11,9 @@ map5[b1][a1] = 0
 
 move_list = ['r','l','u','d']
 elite_size = 3
-chromosome_length = 20
+chromosome_length = 15
 
-population_size = 20
+population_size = 15
 parents_number = 10
 #Initial population
 population = []
@@ -29,7 +29,7 @@ def fitness(population):
     for chromosome in population:
         a = a1
         b = b1
-        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]] 
+        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[0,1,1,3,1],[0,0,0,1,0]] 
         result = []
         match = 0 #Số ô còn lại
         distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích
@@ -109,3 +109,38 @@ def crossover(parent1,parent2):
         else:
             child.append(parent2[i])
     return child
+
+def create_children(parents): #parents = select_parents(fitness_scores)
+    children = []
+    num_new_children = len(population) - elite_size
+
+    for i in range(0,elite_size):
+        children.append(parents[i]) #Giữ lại những NST bố (mẹ) tốt (những NST xếp đầu trong list parents)
+
+    for i in range(0,num_new_children): #Những NST còn lại đem đi tạo thế hệ con 
+        parent1 = parents[int(random.random() * len(parents))]
+        parent2 = parents[int(random.random() * len(parents))]
+        children.append(crossover(parent1,parent2)) #Dùng hàm breed() ở trên
+    return children
+
+def mutation(children): 
+    for i in range(len(children)):
+        if random.random() > 0.5:
+            continue
+        else:
+            mutated_position = int(random.random() * chromosome_length) #Vị trí xảy ra đột biến
+            mutation = random.choice(move_list) #Chọn số bất kỳ để thay 
+            children[i][mutated_position] = mutation
+    return children
+generation = 0
+while True:
+    fitness_scores = fitness(population)
+    if min([i[1] for i in fitness_scores]) == 0:
+        a = [i[0] for i in fitness_scores if i[1] == 0][0] 
+        print("Discovered solution = {}".format(a))
+        print(generation)
+        break
+    parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất
+    children = create_children(parents) #Tạo thế hệ con từ parents
+    population = mutation(children) #Quần thể sau đột biến
+    generation +=1
