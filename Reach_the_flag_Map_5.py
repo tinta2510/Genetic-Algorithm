@@ -93,18 +93,15 @@ def select_parents(fitness_scores):
 
 def crossover(parent1,parent2):
     child = []
-
-    #parent1 = parents[0]
-    #parent2 = parents[1]
     
-    geneA = int(random.random() * chromosome_length)
-    geneB = int(random.random() * chromosome_length)
+    positionA = random.randint(0,chromosome_length-1)
+    positionB = random.randint(0,chromosome_length-1)
 
-    startGene = min(geneA, geneB) #điểm bắt đầu và kết thúc crossover
-    endGene = max(geneA, geneB)
+    start = min(positionA, positionB) #điểm bắt đầu và kết thúc crossover
+    end = max(positionA, positionB)
 
     for i in range(0,chromosome_length):
-        if (i < startGene) or (i > endGene):
+        if (i < start) or (i > end):
             child.append(parent1[i])
         else:
             child.append(parent2[i])
@@ -118,8 +115,8 @@ def create_children(parents): #parents = select_parents(fitness_scores)
         children.append(parents[i]) #Giữ lại những NST bố (mẹ) tốt (những NST xếp đầu trong list parents)
 
     for i in range(0,num_new_children): #Những NST còn lại đem đi tạo thế hệ con 
-        parent1 = parents[int(random.random() * len(parents))]
-        parent2 = parents[int(random.random() * len(parents))]
+        parent1 = parents[random.randint(0,len(parents)-1)]
+        parent2 = parents[random.randint(0,len(parents)-1)]
         children.append(crossover(parent1,parent2)) #Dùng hàm breed() ở trên
     return children
 
