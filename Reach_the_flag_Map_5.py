@@ -12,9 +12,9 @@ map5[b1][a1] = 0
 
 move_list = ['r','l','u','d']
 elite_size = 3
-chromosome_length = 10
+chromosome_length = 20
 
-population_size = 12
+population_size = 20
 parents_number = 10
 #Initial population
 population = []
@@ -143,3 +143,6 @@ while True:
     children = create_children(parents) #Tạo thế hệ con từ parents
     population = mutation(children) #Quần thể sau đột biến
     generation +=1
+    if generation == 10000:
+        print("Break at generation: {}".format(generation))
+        break
