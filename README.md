@@ -34,7 +34,7 @@ a) Khởi tạo quẩn thể (Initial Population):
         population.append(chromosome)
 
 b) Đánh giá độ phù hợp (Evaluate fitness): 
-- Sau khi đã khởi tạo quần thể, cho các chromosome chạy thử trên map. Sau đó, đánh giá độ phù hợp bằng cách cộng tổng số điểm của các ô còn lại trên map (match) với khoảng cách (distance) từ con trỏ (a,b) tới vị trí đích (a0,b0). 
+- Sau khi đã khởi tạo quần thể, cho các chromosome chạy thử trên map. Sau đó, đánh giá độ phù hợp bằng cách cộng tổng số điểm của các ô còn lại trên map (match) với khoảng cách (distance) từ con trỏ (a,b) tới vị trí đích (a0,b0). Điểm số càng cao thì fitness càng thấp.
 *Chú thích: 
     + Tổng số điểm của các ô còn lại trên map (match): match += 1 nếu ô còn lại là 1 (vàng)
                                                        match += 2 nếu ô còn lại là 2 (vàng nâu)
@@ -59,4 +59,29 @@ def fitness(population):
         fitness_scores.append(result)
     return fitness_scores    
 
-c) Sinh sản (Crossover):                                                   
+c) Sinh sản (Crossover):  
+* Lựa chọn thế hệ bố (select_parents): Chọn những chromosome có độ phù hợp cao nhất (điểm số thấp nhất) để làm bố mẹ (từ 10 đến 20 chromosome).
+
+* Kết hợp 2 chromosome: 
+    - Chọn ngẫu nhiên 2 NST bố mẹ trong tập. 
+    - Chọn 2 vị trí geneA, geneB ngẫu nhiên trên NST
+    - Từ vị trí 1 đến vị trí geneA và từ vị trí geneB đến vị trí cuối, ta lấy những gene từ parent1.
+    - Từ vị trí geneA đến geneB trên NST ta dùng những gene từ parent2.
+    - Ví dụ:
+    def crossover(parent1,parent2):
+    child = []
+    
+    geneA = random.randint(0,chromosome_length-1)
+    geneB = random.randint(0,chromosome_length-1)
+
+    startGene = min(geneA, geneB) #điểm bắt đầu và kết thúc crossover
+    endGene = max(geneA, geneB)
+
+    for i in range(0,chromosome_length):
+        if (i < startGene) or (i > endGene):
+            child.append(parent1[i])
+        else:
+            child.append(parent2[i])
+    return child
+
+
