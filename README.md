@@ -84,4 +84,20 @@ c) Sinh sản (Crossover):
             child.append(parent2[i])
     return child
 
+d) Tạo đột biến: 
+- Sau khi tạo ra thế hệ con, ta đến thành phần tiếp theo của giải thuật di truyền là tạo đột biến. Sau đó, ta tiếp tục quay lại từ bước đánh giá độ phù hợp của quần thể vừa tạo thành. 
+- Cách tạo đột biến: 
+    + Chọn một tỷ lệ xảy ra đột biến (trong ví dụ dưới đây là 0.3), sử dụng hàm random.random() để chọn một số thập phân x trong khoảng (0,1)
+    + Nếu x>0.3, ta bỏ qua.
+    + Nếu x<0.3, ta chọn một vị trí ngẫu nhiên trên choromosome sau đó thay vị trí gene đó bằng một gene khác 
+- Ví dụ: 
+    def mutation(children): 
+        for i in range(len(children)):
+            if random.random() > 0.3:
+                continue
+            else: 
+                mutated_position = int(random.random() * chromosome_length) #Vị trí xảy ra đột biến
+                mutation = random.choice(move_list) #Chọn số bất kỳ để thay 
+                children[i][mutated_position] = mutation
+        return children
 
