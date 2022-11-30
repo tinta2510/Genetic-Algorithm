@@ -1,21 +1,28 @@
 import random 
 import time
 #Map game 5:
-map5 = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
+map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
 #Vi tri dich
 a0 = 4
 b0 = 1 
 #Vi tri ban dau
 a1 = 0
 b1 = 4
-map5[b1][a1] = 0
+map[b1][a1] = 0
 
 move_list = ['r','l','u','d']
 elite_size = 3
-chromosome_length = 20
+chromosome_length = 0
 
 population_size = 20
 parents_number = 10
+
+for i in map: 
+    for j in i: 
+        if j == 1: chromosome_length+=1
+        if j == 2: chromosome_length+=2
+        if (j == 3) or (j==5): chromosome_length+=4
+
 #Initial population
 population = []
 for i in range(population_size):
@@ -30,7 +37,8 @@ def fitness(population):
     for chromosome in population:
         a = a1
         b = b1
-        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[0,1,1,3,1],[0,0,0,1,0]] 
+        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]] 
+        map[b1][a1] = 0
         result = []
         match = 0 #Số ô còn lại
         distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích
@@ -142,7 +150,7 @@ while True:
     parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất
     children = create_children(parents) #Tạo thế hệ con từ parents
     population = mutation(children) #Quần thể sau đột biến
-    generation +=1
-    if generation == 10000:
+    generation += 1
+    if generation == 200000:
         print("Break at generation: {}".format(generation))
         break
