@@ -1,14 +1,15 @@
 import random 
 import time
+import copy
 #Map game 5:
-map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
+map_game = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
 #Vi tri dich
 a0 = 4
 b0 = 1 
 #Vi tri ban dau
 a1 = 0
 b1 = 4
-map[b1][a1] = 0
+map_game[b1][a1] = 0
 
 move_list = ['r','l','u','d']
 elite_size = 3
@@ -17,7 +18,7 @@ chromosome_length = 0
 population_size = 20
 parents_number = 10
 
-for i in map: 
+for i in map_game: 
     for j in i: 
         if j == 1: chromosome_length+=1
         if j == 2: chromosome_length+=2
@@ -37,8 +38,7 @@ def fitness(population):
     for chromosome in population:
         a = a1
         b = b1
-        map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]] 
-        map[b1][a1] = 0
+        map = copy.deepcopy(map_game)
         result = []
         match = 0 #Số ô còn lại
         distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích
