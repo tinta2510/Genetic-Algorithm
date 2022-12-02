@@ -1,6 +1,4 @@
-import random 
-import time
-import copy
+import random,time,copy
 #Map game 5:
 map_game = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
 #Vi tri dich
@@ -154,3 +152,4 @@ while True:
     if generation == 200000:
         print("Break at generation: {}".format(generation))
         break
+
