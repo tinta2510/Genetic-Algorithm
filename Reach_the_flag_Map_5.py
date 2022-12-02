@@ -52,7 +52,7 @@ def fitness(population):
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
-            if i == 'd': 
+            elif i == 'd': 
                 b-= 1
                 if (b<0):
                     b+= 1 
@@ -62,7 +62,7 @@ def fitness(population):
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
-            if i == 'r': 
+            elif i == 'r': 
                 a+= 1
                 if (a > len(map[0])-1): 
                     a-= 1 
@@ -72,7 +72,7 @@ def fitness(population):
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
-            if i == 'l':  
+            elif i == 'l':  
                 a-= 1
                 if (a<0): 
                     a+= 1 
