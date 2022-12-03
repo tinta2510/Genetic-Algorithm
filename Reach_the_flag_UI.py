@@ -1,13 +1,50 @@
-import random,time,copy,pygame,sys
+import random
+import time,copy
+import pygame,sys
 from pygame.locals import *
-#Map game 5:
-map_game = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
-#Vi tri dich
-a0 = 4
-b0 = 1 
-#Vi tri ban dau
-a1 = 0
-b1 = 4
+round = 5
+match round:
+    case 3:
+        map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
+        #Vi tri dich
+        a0 = 6
+        b0 = 0
+        #Vi tri ban dau
+        a1 = 0
+        b1 = 0
+    case 4: 
+        map_game = [[1,1,1,2,5],[0,0,0,1,0]] #a=0,b=0
+        #Vi tri dich
+        a0 = 4
+        b0 = 0
+        #Vi tri ban dau
+        a1 = 0
+        b1 = 0
+    case 5:
+        map_game = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
+        #Vi tri dich
+        a0 = 4
+        b0 = 1 
+        #Vi tri ban dau
+        a1 = 0
+        b1 = 4
+    case 8:
+        map_game = [[1,1,1,1,1,0],[1,1,1,1,2,1],[1,1,1,0,1,1],[1,1,1,1,1,1],[5,2,1,1,1,0],[0,1,1,1,1,0]] #a=5,b=3
+        #Vi tri dich
+        a0 = 0
+        b0 = 4
+        #Vi tri ban dau
+        a1 = 5
+        b1 = 3
+    case 12: 
+        [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
+        #Vi tri dich
+        a0 = 3
+        b0 = 0
+        #Vi tri ban dau
+        a1 = 0
+        b1 = 3
+
 map_game[b1][a1] = 0
 
 move_list = ['r','l','u','d']
@@ -209,13 +246,13 @@ while True:
         if map[b][a] == 1: map[b][a] -= 1
         if map[b][a] == 2: map[b][a] -= 1  
     i+=1
-    if i == len(solution): break
-
+    if i >= len(solution): break
+    
 print("Discovered solution = {}".format(solution))
 
 #Build UI:
 map = copy.deepcopy(map_game)
-size = 100 #block_size
+size = 60 #block_size
 WINDOWHEIGHT = len(map)*size
 WINDOWWIDTH  = len(map[0])*size
 
@@ -263,7 +300,7 @@ while True:
 
     if k < len(solution)-1: k+=1
     else: 
-        time.sleep(5)
+        time.sleep(3)
         break    
     if map[b][a] == 1: map[b][a] = 0
     elif map[b][a] == 2: map[b][a] = 1
