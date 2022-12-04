@@ -2,57 +2,72 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 5
+round = 8
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
-        #Vi tri dich
+        #Flag:
         a0 = 6
         b0 = 0
-        #Vi tri ban dau
+        #Initial position:
         a1 = 0
         b1 = 0
     case 4: 
         map_game = [[1,1,1,2,5],[0,0,0,1,0]] #a=0,b=0
-        #Vi tri dich
+        #Flag:
         a0 = 4
         b0 = 0
-        #Vi tri ban dau
+        #Initial position:
         a1 = 0
         b1 = 0
     case 5:
         map_game = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
-        #Vi tri dich
+        #Flag:
         a0 = 4
         b0 = 1 
-        #Vi tri ban dau
+        #Initial position:
         a1 = 0
         b1 = 4
+    case 7: 
+        map_game = [[0,0,1,1,0,0],[0,0,1,1,0,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,1,1,1,1],[0,0,1,1,1,1],[0,0,5,1,0,0]] #a=2,b=5
+        #Flag:
+        a0 = 2
+        b0 = 5 
+        #Initial position:
+        a1 = 2
+        b1 = 5
     case 8:
         map_game = [[1,1,1,1,1,0],[1,1,1,1,2,1],[1,1,1,0,1,1],[1,1,1,1,1,1],[5,2,1,1,1,0],[0,1,1,1,1,0]] #a=5,b=3
-        #Vi tri dich
+        #Flag:
         a0 = 0
         b0 = 4
-        #Vi tri ban dau
+        #Initial position:
         a1 = 5
         b1 = 3
     case 12: 
-        [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
-        #Vi tri dich
+        map_game = [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
+        #Flag:
         a0 = 3
         b0 = 0
-        #Vi tri ban dau
+        #Initial position:
         a1 = 0
         b1 = 3
-
+    case 13: 
+        map_game = [[0,0,0,0,5,0,0,0],[0,0,0,0,1,1,0,0],[0,0,0,0,1,2,1,0],[0,1,1,0,1,2,2,0],[1,2,2,1,1,0,1,0],[0,1,2,1,1,0,2,1],[0,0,1,2,1,0,2,1],[0,0,0,1,1,1,1,0],[0,0,0,0,1,1,0,0]] #a=0,b=4
+        #Flag:
+        a0 = 4
+        b0 = 0
+        #Initial position:
+        a1 = 0
+        b1 = 4
 map_game[b1][a1] = 0
 
 move_list = ['r','l','u','d']
-elite_size = 3
+elite_size = 5
 chromosome_length = 0
 
-population_size = 20
-parents_number = 10
+population_size = 30
+parents_number = 15
 
 for i in map_game: 
     for j in i: 
@@ -181,14 +196,20 @@ while True:
     if min([i[1] for i in fitness_scores]) == 0:
         solution = [i[0] for i in fitness_scores if i[1] == 0][0] 
         print("Discovered solution = {}".format(solution))
-        print("In {} generations and {} seconds".format(generation,time.time() - t0))
+        print("Solved at generation {},in {} seconds".format(generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất
     children = create_children(parents) #Tạo thế hệ con từ parents
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
-    if generation == 200000:
-        print("Break at generation: {}".format(generation))
+    if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
+    if generation == 100000:
+        print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
+        solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
+        mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
+        solution = solution[0]
+        print("Best way coud be found: {}, fitness_score: {}".format(solution,mark[0]))
+        #sys.exit()
         break
 
 #Print Solution: 
@@ -246,9 +267,9 @@ while True:
         if map[b][a] == 1: map[b][a] -= 1
         if map[b][a] == 2: map[b][a] -= 1  
     i+=1
-    if i >= len(solution): break
+    if i >= len(solution)-2: break
     
-print("Discovered solution = {}".format(solution))
+print("Move = {}".format(solution))
 
 #Build UI:
 map = copy.deepcopy(map_game)
@@ -271,7 +292,7 @@ FPS = 1.5
 fpsClock = pygame.time.Clock()
 
 DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
-pygame.display.set_caption('Reach_the_flag')
+pygame.display.set_caption('Reach_the_flag_Round{}'.format(round))
 
 x = a1*size
 y = WINDOWHEIGHT-(b1+1)*size
