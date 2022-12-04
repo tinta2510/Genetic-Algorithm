@@ -128,7 +128,7 @@ def fitness(population):
                 if x==1: match += 1
                 if x==2: match += 2
         distance = abs(a0-a) + abs(b0-b)
-        result = [chromosome,match*2+distance]
+        result = [chromosome,match+distance]
         fitness_scores.append(result)
     return fitness_scores
 
@@ -182,7 +182,7 @@ while True:
     fitness_scores = fitness(population)
     if min([i[1] for i in fitness_scores]) == 0:
         a = [i[0] for i in fitness_scores if i[1] == 0][0] 
-        print("Discovered solution = {}".format(a))
+        print("Discovered solution for round {} = {}".format(round,))
         print("In {} generations and {} seconds".format(generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) 
@@ -194,6 +194,6 @@ while True:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
-        print("Best way coud be found: {}, fitness_score: {}".format(solution[0],mark[0]))
+        print("Best way coud be found for round {}: {}, fitness_score: {}".format(round,solution[0],mark[0]))
         break
 

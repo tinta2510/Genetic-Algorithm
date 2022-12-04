@@ -140,7 +140,7 @@ def fitness(population):
                 if x==1: match += 1
                 if x==2: match += 2
         distance = abs(a0-a) + abs(b0-b)
-        result = [chromosome,match*2+distance]
+        result = [chromosome,match+distance]
         fitness_scores.append(result)
     return fitness_scores
 
@@ -195,7 +195,7 @@ while True:
     fitness_scores = fitness(population)
     if min([i[1] for i in fitness_scores]) == 0:
         solution = [i[0] for i in fitness_scores if i[1] == 0][0] 
-        print("Discovered solution = {}".format(solution))
+        print("Discovered solution for round {} = {}".format(round,solution))
         print("Solved at generation {},in {} seconds".format(generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất
@@ -203,12 +203,12 @@ while True:
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 100000:
+    if generation == 15000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         solution = solution[0]
-        print("Best way coud be found: {}, fitness_score: {}".format(solution,mark[0]))
+        print("Best way coud be found for round {}: {}, fitness_score: {}".format(round,solution,mark[0]))
         #sys.exit()
         break
 
@@ -270,7 +270,7 @@ while True:
     if i >= len(solution)-2: break
     
 print("Move = {}".format(solution))
-
+print('\a')
 #Build UI:
 map = copy.deepcopy(map_game)
 size = 60 #block_size
@@ -288,7 +288,7 @@ GRAY    = (169, 169, 169)
 
 pygame.init() 
 
-FPS = 1.5
+FPS = 1.25
 fpsClock = pygame.time.Clock()
 
 DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
