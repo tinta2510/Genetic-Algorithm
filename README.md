@@ -12,17 +12,20 @@ a. Mô phỏng bản đồ game:
     + Số 5 tương ứng với Flag
     + Số 0 là những vị trí không đi được
 - Ví dụ: 
+```sh
     #Mô phỏng Round 5:
     map5 = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
     #vị trí ban đầu:
     a=0 
     b=4
+```
 b. Các bước di chuyển: 
 - Các nút Up, Down, Right, Left lần lượt tương ứng y+=1; y-=1; x+=1;x-=1
 
 3. Giải thuật di truyền để giải game Reach the flag:
 a) Khởi tạo quẩn thể (Initial Population):
 - Khởi tạo quần thể (population) gồm các NST (chromosome) ban đầu là tập các bước di chuyển (r,l,u,d) với độ dài (chromosome_length) và độ lớn quần thể (population_size) cho trước.
+```sh
     population_size = 20
     chromosome_length = 20
     #Initial population
@@ -32,7 +35,7 @@ a) Khởi tạo quẩn thể (Initial Population):
         for x in range(chromosome_length):
             chromosome.append(random.choice(move_list))
         population.append(chromosome)
-
+```
 b) Đánh giá độ phù hợp (Evaluate fitness): 
 - Sau khi đã khởi tạo quần thể, cho các chromosome chạy thử trên map. Sau đó, đánh giá độ phù hợp bằng cách cộng tổng số điểm của các ô còn lại trên map (match) với khoảng cách (distance) từ con trỏ (a,b) tới vị trí đích (a0,b0). Điểm số càng cao thì fitness càng thấp.
 *Chú thích: 
