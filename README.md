@@ -5,6 +5,7 @@ Trình bày về game Reach the flag và cách giải game bằng Genetics Algor
 - Cách chơi: sử dụng các nút mũi tên lên, xuống, sang trái, sang phải để di chuyển nhân vật giữa các ô khác nhau. Ô màu vàng sẽ rơi xuống khi bạn bước qua chúng, ô màu vàng nâu sẽ rơi xuống khi bạn bước qua chúng 2 lần, ô màu xám sẽ không rơi khi bạn bước qua. 
 ---
 2. Mô phỏng game trên Python:
+
 a. Mô phỏng bản đồ game:
 - Sử dụng mảng 2 chiều để tạo hệ trục tọa độ, mỗi điểm trên trục tọa độ đánh các số, mỗi số tương ứng với một loại ô vuông trong game.
     + Số 1 tương ứng với ô vàng (đi qua được 1 lần)
@@ -24,6 +25,7 @@ b. Các bước di chuyển:
 - Các nút Up, Down, Right, Left lần lượt tương ứng y+=1; y-=1; x+=1;x-=1
 ---
 3. Giải thuật di truyền để giải game Reach the flag:
+
 a. Khởi tạo quẩn thể (Initial Population):
 - Khởi tạo quần thể (population) gồm các NST (chromosome) ban đầu là tập các bước di chuyển (r,l,u,d) với độ dài (chromosome_length) và độ lớn quần thể (population_size) cho trước.
 ```sh
@@ -66,7 +68,13 @@ return fitness_scores
 ```
 c) Sinh sản (Crossover):  
 * Lựa chọn thế hệ bố (select_parents): Chọn những chromosome có độ phù hợp cao nhất (điểm số thấp nhất) để làm bố mẹ (từ 10 đến 20 chromosome).
-
+```sh
+def select_parents(fitness_scores):
+    parents_list = []
+    for chromosome in sorted(fitness_scores,key = lambda x: x[1])[:parents_number]:
+        parents_list.append(chromosome[0])
+    return(parents_list)
+```
 * Kết hợp 2 chromosome: 
     - Chọn ngẫu nhiên 2 NST bố mẹ trong tập. 
     - Chọn 2 vị trí geneA, geneB ngẫu nhiên trên NST
