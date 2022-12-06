@@ -25,6 +25,14 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 4
+    case 6:
+        map_game = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[0,5,1,1],[0,0,1,1]] #a=0,b=2
+        #Flag: 
+        a0 = 1
+        b0 = 3
+        #Initial position:
+        a1 = 0
+        b1 = 2
     case 7: 
         map_game = [[0,0,1,1,0,0],[0,0,1,1,0,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,1,1,1,1],[0,0,1,1,1,1],[0,0,5,1,0,0]] #a=2,b=5
         #Flag:
@@ -50,7 +58,7 @@ match round:
         a1 = 0
         b1 = 3
 
-map_game[b1][a1] = 0
+if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
 move_list = ['r','l','u','d']
 elite_size = 5

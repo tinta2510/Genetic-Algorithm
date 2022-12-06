@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 8
+round = 6
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
@@ -28,6 +28,14 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 4
+    case 6:
+        map_game = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[0,5,1,1],[0,0,1,1]] #a=0,b=2
+        #Flag: 
+        a0 = 1
+        b0 = 3
+        #Initial position:
+        a1 = 0
+        b1 = 2
     case 7: 
         map_game = [[0,0,1,1,0,0],[0,0,1,1,0,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,1,1,1,1],[0,0,1,1,1,1],[0,0,5,1,0,0]] #a=2,b=5
         #Flag:
@@ -60,14 +68,14 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 4
-map_game[b1][a1] = 0
+if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
 move_list = ['r','l','u','d']
-elite_size = 5
+elite_size = 4
 chromosome_length = 0
 
-population_size = 30
-parents_number = 15
+population_size = 25
+parents_number = 12
 
 for i in map_game: 
     for j in i: 
@@ -91,9 +99,8 @@ def fitness(population):
         b = b1
         map = copy.deepcopy(map_game)
         result = []
-        match = 0 #Số ô còn lại
-        distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích
-        #Chạy thử các bước di chuyển trên bản đồ
+        match = 0 
+        distance = 0 
         for i in chromosome: 
             if i == 'u': 
                 b+= 1
@@ -144,7 +151,6 @@ def fitness(population):
         fitness_scores.append(result)
     return fitness_scores
 
-#Chọn những Choromosome có fitness_score cao nhất để làm thể hệ bố mẹ
 def select_parents(fitness_scores):
     parents_list = []
     for chromosome in sorted(fitness_scores,key = lambda x: x[1])[:parents_number]:
@@ -157,7 +163,7 @@ def crossover(parent1,parent2):
     positionA = random.randint(0,chromosome_length-1)
     positionB = random.randint(0,chromosome_length-1)
 
-    start = min(positionA, positionB) #điểm bắt đầu và kết thúc crossover
+    start = min(positionA, positionB) #Start and end position of Crossover
     end = max(positionA, positionB)
 
     for i in range(0,chromosome_length):
@@ -172,12 +178,12 @@ def create_children(parents): #parents = select_parents(fitness_scores)
     num_new_children = len(population) - elite_size
 
     for i in range(0,elite_size):
-        children.append(parents[i]) #Giữ lại những NST bố (mẹ) tốt (những NST xếp đầu trong list parents)
+        children.append(parents[i]) #Retain elite parents
 
-    for i in range(0,num_new_children): #Những NST còn lại đem đi tạo thế hệ con 
+    for i in range(0,num_new_children): 
         parent1 = parents[random.randint(0,len(parents)-1)]
         parent2 = parents[random.randint(0,len(parents)-1)]
-        children.append(crossover(parent1,parent2)) #Dùng hàm breed() ở trên
+        children.append(crossover(parent1,parent2)) 
     return children
 
 def mutation(children): 
@@ -185,8 +191,8 @@ def mutation(children):
         if random.random() > 0.3:
             continue
         else:
-            mutated_position = int(random.random() * chromosome_length) #Vị trí xảy ra đột biến
-            mutation = random.choice(move_list) #Chọn số bất kỳ để thay 
+            mutated_position = int(random.random() * chromosome_length) #Mutated position
+            mutation = random.choice(move_list) 
             children[i][mutated_position] = mutation
     return children
 generation = 0
@@ -203,7 +209,7 @@ while True:
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 15000:
+    if generation == 100000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
