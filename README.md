@@ -7,16 +7,21 @@ Trình bày về game Reach the flag và cách giải game bằng Genetics Algor
 2. Mô phỏng game trên Python:
 
 a. Mô phỏng bản đồ game:
-- Sử dụng mảng 2 chiều để tạo hệ trục tọa độ, mỗi điểm trên trục tọa độ đánh các số, mỗi số tương ứng với một loại ô vuông trong game.
+- Sử dụng mảng 2 chiều để tạo hệ trục tọa độ, mỗi điểm trên mặt phẳng tọa độ đánh các số, mỗi số tương ứng với một loại ô vuông trong game.
     + Số 1 tương ứng với ô vàng (đi qua được 1 lần)
     + Số 2 tương ứng với ô vàng nâu (đi qua được 2 lần)
-    + Số 3 tương ứng với ô màu xám
+    + Số 3 tương ứng với ô màu xám (đi qua được vô số lần) 
     + Số 5 tương ứng với Flag
     + Số 0 là những vị trí không đi được
 - Ví dụ: 
 ```sh
 #Round 5:
-map5 = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[1,1,1,3,1],[0,0,0,1,0]]
+map5 = [[0,0,0,1,0],
+        [0,0,0,5,1],
+        [0,0,0,1,0],    
+        [0,0,0,1,0],
+        [1,1,1,3,1],
+        [0,0,0,1,0]]
 #Initial position:
 a=0 
 b=4
@@ -56,7 +61,47 @@ def fitness(population):
         result = []
         match = 0 #Số ô còn lại
         distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích       
-        for i in chromosome: #Chạy thử các bước di chuyển trên bản đồ
+        for i in chromosome: #Cho các Chromosome chạy trên bản đồ
+                if i == 'u': 
+                b+= 1
+                if (b > len(map)-1): 
+                    b-= 1 
+                    continue
+                if map[b][a] == 0: 
+                    b-= 1
+                    continue
+                if map[b][a] == 1: map[b][a] -= 1
+                if map[b][a] == 2: map[b][a] -= 1
+            if i == 'd': 
+                b-= 1
+                if (b<0):
+                    b+= 1 
+                    continue
+                if map[b][a] == 0: 
+                    b+= 1
+                    continue
+                if map[b][a] == 1: map[b][a] -= 1
+                if map[b][a] == 2: map[b][a] -= 1
+            if i == 'r': 
+                a+= 1
+                if (a > len(map[0])-1): 
+                    a-= 1 
+                    continue
+                if map[b][a] == 0: 
+                    a-= 1
+                    continue
+                if map[b][a] == 1: map[b][a] -= 1
+                if map[b][a] == 2: map[b][a] -= 1
+            if i == 'l':  
+                a-= 1
+                if (a<0): 
+                    a+= 1 
+                    continue
+                if map[b][a] == 0: 
+                    a+= 1
+                    continue
+                if map[b][a] == 1: map[b][a] -= 1
+                if map[b][a] == 2: map[b][a] -= 1  
         for y in range(len(map)):
             for x in map[y]:
                 if x==1: match += 1
