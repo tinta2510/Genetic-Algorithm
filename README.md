@@ -66,7 +66,7 @@ def fitness(population):
         fitness_scores.append(result)
 return fitness_scores    
 ```
-c) Sinh sản (Crossover):  
+c) Lai tạo (Crossover):  
 * Lựa chọn thế hệ bố (select_parents): Chọn những chromosome có độ phù hợp cao nhất (điểm số thấp nhất) để làm bố mẹ (từ 10 đến 20 chromosome).
 ```sh
 def select_parents(fitness_scores):
@@ -75,7 +75,7 @@ def select_parents(fitness_scores):
         parents_list.append(chromosome[0])
     return(parents_list)
 ```
-* Kết hợp 2 chromosome: 
+* Kết hợp 2 chromosome: (ở đây ta sẽ sử dụng Multi-point Crossover) 
     - Chọn ngẫu nhiên 2 NST bố mẹ trong tập. 
     - Chọn 2 vị trí geneA, geneB ngẫu nhiên trên NST
     - Từ vị trí 1 đến vị trí geneA và từ vị trí geneB đến vị trí cuối, ta lấy những gene từ parent1.
