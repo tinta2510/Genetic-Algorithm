@@ -1,19 +1,30 @@
-Trình bày về game Reach the flag và cách giải game bằng Genetics Algorithm
------
-1. Mô tả trò chơi:
+# Trình bày về game Reach the flag và cách giải game bằng Genetics Algorithm
+### Mục lục: 
+[1. Mô tả trò chơi](#1)  
+
+[2. Mô phỏng game trên Python](#2)  
+
+[3. Cách áp dụng Genetic Algorithm để giải game Reach the flag](#3)  
+[a. Khởi tạo quẩn thể (Creating Initial Population)](#3a)  
+[b. Đánh giá độ phù hợp (Evaluate fitness)](#3b)  
+[c. Chọn lọc (Selection)](#3c)  
+[d. Lai tạo (Crossover)](#3d)  
+[e. Đột biến (Mutation)](#3e)  
+<a name = "1"></a>
+## 1. Mô tả trò chơi:
 - Mục tiêu: đưa nhân vật từ vị trí ban đầu đến ô có cắm cờ.
 - Cách chơi: sử dụng các nút mũi tên lên, xuống, sang trái, sang phải để di chuyển nhân vật giữa các ô khác nhau. Ô màu vàng sẽ rơi xuống khi bạn bước qua chúng, ô màu vàng nâu sẽ rơi xuống khi bạn bước qua chúng 2 lần, ô màu xám sẽ không rơi khi bạn bước qua. 
----
-2. Mô phỏng game trên Python:
 
-a. Mô phỏng bản đồ game:
+<a name = "2"></a>
+## 2. Mô phỏng game trên Python:
+### a. Mô phỏng bản đồ game:
 - Sử dụng mảng 2 chiều để tạo hệ trục tọa độ, mỗi điểm trên mặt phẳng tọa độ đánh các số, mỗi số tương ứng với một loại ô vuông trong game.
-    + Số 1 tương ứng với ô vàng (đi qua được 1 lần)
-    + Số 2 tương ứng với ô vàng nâu (đi qua được 2 lần)
-    + Số 3 tương ứng với ô màu xám (đi qua được vô số lần) 
-    + Số 5 tương ứng với Flag
-    + Số 0 là những vị trí không đi được
-- Ví dụ: 
+    + Số 1 tương ứng với ô vàng (đi qua được 1 lần).
+    + Số 2 tương ứng với ô vàng nâu (đi qua được 2 lần).
+    + Số 3 tương ứng với ô màu xám (đi qua được vô số lần).
+    + Số 5 tương ứng với Flag.
+    + Số 0 là những vị trí không đi được.
+- Code:  
 ```sh
 #Round 5:
 map5 = [[0,0,0,1,0],
@@ -26,12 +37,59 @@ map5 = [[0,0,0,1,0],
 a=0 
 b=4
 ```
-b. Các bước di chuyển: 
+### b. Các bước di chuyển: 
 - Các nút Up, Down, Right, Left lần lượt tương ứng y+=1; y-=1; x+=1;x-=1
----
-3. Giải thuật di truyền để giải game Reach the flag:
-
-a. Khởi tạo quẩn thể (Initial Population):
+```sh
+#Giả sử cho Chromosome:
+chromosome = ['r', 'd', 'r', 'd', 'r', 'u', 'd', 'r', 'l', 'd', 'd', 'd', 'd', 'u', 'r', 'r']
+```
+```sh
+for i in chromosome: 
+    if i == 'u': 
+        b+= 1 
+        if (b > len(map)-1): #Nếu ô mà con trỏ bước lên nằm ngoài khu vực bản đồ, con trỏ sẽ lùi lại vị trí trước.
+            b-= 1 
+            continue
+        if map[b][a] == 0: #Nếu ô mà con trỏ trỏ lên là ô số 0, con trỏ sẽ trở lại vị trí trước đó
+            b-= 1
+            continue
+        if map[b][a] == 1: map[b][a] -= 1
+        if map[b][a] == 2: map[b][a] -= 1
+    if i == 'd': 
+        b-= 1
+        if (b<0):
+            b+= 1 
+            continue
+        if map[b][a] == 0: 
+            b+= 1
+            continue
+        if map[b][a] == 1: map[b][a] -= 1
+        if map[b][a] == 2: map[b][a] -= 1
+    if i == 'r': 
+        a+= 1
+        if (a > len(map[0])-1): 
+            a-= 1 
+            continue
+        if map[b][a] == 0: 
+            a-= 1
+            continue
+        if map[b][a] == 1: map[b][a] -= 1
+        if map[b][a] == 2: map[b][a] -= 1
+    if i == 'l':  
+        a-= 1
+        if (a<0): 
+            a+= 1 
+            continue
+        if map[b][a] == 0: 
+            a+= 1
+            continue
+        if map[b][a] == 1: map[b][a] -= 1
+        if map[b][a] == 2: map[b][a] -= 1  
+```
+<a name = "3"></a>
+## 3. Cách áp dụng Genetic Algorithm để giải game Reach the flag:
+<a name = "3a"></a>
+### a. Khởi tạo quẩn thể (Creating Initial Population):
 - Khởi tạo quần thể (population) gồm các NST (chromosome) ban đầu là tập các bước di chuyển (r,l,u,d) với độ dài (chromosome_length) và độ lớn quần thể (population_size) cho trước.
 ```sh
 population_size = 20
@@ -46,7 +104,8 @@ for i in range(population_size):
 #Kết quả thu được: 
 #chromosome1 = ['d', 'l', 'u', 'u', 'l', 'l', 'l', 'l', 'r', 'l', 'd', 'r', 'u', 'd', 'u', 'd', 'u', 'd', 'r', 'r'] 
 ```
-b) Đánh giá độ phù hợp (Evaluate fitness): 
+<a name = "3b"></b>
+### b) Đánh giá độ phù hợp (Evaluate fitness): 
 - Sau khi đã khởi tạo quần thể, cho các chromosome chạy thử trên map. Sau đó, đánh giá độ phù hợp bằng cách cộng tổng số điểm của các ô còn lại trên map (match) với khoảng cách (distance) từ con trỏ (a,b) tới vị trí đích (a0,b0). Điểm số càng cao thì fitness càng thấp.
 *Chú thích: 
     + Tổng số điểm của các ô còn lại trên map (match): match += 1 nếu ô còn lại là 1 (vàng)
@@ -62,48 +121,8 @@ def fitness(population):
         map = [[0,0,0,1,0],[0,0,0,5,1],[0,0,0,1,0],[0,0,0,1,0],[0,1,1,3,1],[0,0,0,1,0]] 
         result = []
         match = 0 #Số ô còn lại
-        distance = 0 #Khoảng cách từ vị trí cuối đến vị trí đích       
-        for i in chromosome: #Cho các Chromosome chạy trên bản đồ
-                if i == 'u': 
-                b+= 1
-                if (b > len(map)-1): 
-                    b-= 1 
-                    continue
-                if map[b][a] == 0: 
-                    b-= 1
-                    continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'd': 
-                b-= 1
-                if (b<0):
-                    b+= 1 
-                    continue
-                if map[b][a] == 0: 
-                    b+= 1
-                    continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'r': 
-                a+= 1
-                if (a > len(map[0])-1): 
-                    a-= 1 
-                    continue
-                if map[b][a] == 0: 
-                    a-= 1
-                    continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'l':  
-                a-= 1
-                if (a<0): 
-                    a+= 1 
-                    continue
-                if map[b][a] == 0: 
-                    a+= 1
-                    continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1  
+        distance = 0 #Distance between the last position of player and flag
+        for i in chromosome: #Phần này tương tự phần mô phỏng các bước di chuyển nên em rút gọn bớt
         for y in range(len(map)):
             for x in map[y]:
                 if x==1: match += 1
@@ -113,8 +132,9 @@ def fitness(population):
         fitness_scores.append(result)
 return fitness_scores    
 ```
-c) Lai tạo (Crossover):  
-* Lựa chọn thế hệ bố (select_parents): Chọn những chromosome có độ phù hợp cao nhất (điểm số thấp nhất) để làm bố mẹ (từ 10 đến 20 chromosome).
+<a name = "3c"></a>
+### c) Chọn lọc (Selection):  
+* Lựa chọn choromosome thế hệ bố-mẹ (select_parents): Chọn những chromosome có độ phù hợp cao nhất (result có điểm thấp nhất) để làm bố mẹ. Số chromosome bố-mẹ tùy thuộc vào hyperparameter parents_number.
 ```sh
 def select_parents(fitness_scores):
     parents_list = []
@@ -122,12 +142,15 @@ def select_parents(fitness_scores):
         parents_list.append(chromosome[0])
     return(parents_list)
 ```
+* Bên cạnh đó, chúng ta truyền nguyên những chromosome có fitness cao nhất cho thế hệ tiếp theo (retain elite). 
+<a name = "3d"></a>
+### d) Lai tạo (Crossover): 
 * Kết hợp 2 chromosome: (ở đây ta sẽ sử dụng Multi-point Crossover) 
     - Chọn ngẫu nhiên 2 NST bố mẹ trong tập. 
     - Chọn 2 vị trí geneA, geneB ngẫu nhiên trên NST
     - Từ vị trí 1 đến vị trí geneA và từ vị trí geneB đến vị trí cuối, ta lấy những gene từ parent1.
     - Từ vị trí geneA đến geneB trên NST ta dùng những gene từ parent2.
-    - Ví dụ:
+    - Code:
  ```sh
 def crossover(parent1,parent2):
 child = []
@@ -145,7 +168,22 @@ for i in range(0,chromosome_length):
         child.append(parent2[i])
 return child
 ```
-d) Tạo đột biến: 
+```sh
+def create_children(parents): #parents = select_parents(fitness_scores)
+    children = []
+    num_new_children = len(population) - elite_size
+
+    for i in range(0,elite_size):
+        children.append(parents[i]) #Giữ lại những NST bố (mẹ) tốt (những NST xếp đầu trong list parents)
+
+    for i in range(0,num_new_children): #Những NST còn lại đem đi tạo thế hệ con 
+        parent1 = parents[random.randint(0,len(parents)-1)]
+        parent2 = parents[random.randint(0,len(parents)-1)]
+        children.append(crossover(parent1,parent2)) 
+    return children
+```
+<a name = "3e"></a>
+### e) Tạo đột biến (Mutation): 
 - Sau khi tạo ra thế hệ con, ta đến thành phần tiếp theo của giải thuật di truyền là tạo đột biến. Sau đó, ta tiếp tục quay lại từ bước đánh giá độ phù hợp của quần thể vừa tạo thành. 
 - Cách tạo đột biến: 
     + Chọn một tỷ lệ xảy ra đột biến (trong ví dụ dưới đây là 0.3), sử dụng hàm random.random() để chọn một số thập phân x trong khoảng (0,1)
