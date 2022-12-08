@@ -4,7 +4,7 @@
 
 [2. Mô phỏng game trên Python](#2)  
 
-[3. Cách áp dụng Genetic Algorithm để giải game Reach the flag](#3)  
+[3. Áp dụng Genetic Algorithm để giải game Reach the flag](#3)  
 [a. Khởi tạo quẩn thể (Creating Initial Population)](#3a)  
 [b. Đánh giá độ phù hợp (Evaluate fitness)](#3b)  
 [c. Chọn lọc (Selection)](#3c)  
@@ -87,7 +87,7 @@ for i in chromosome:
         if map[b][a] == 2: map[b][a] -= 1  
 ```
 <a name = "3"></a>
-## 3. Cách áp dụng Genetic Algorithm để giải game Reach the flag:
+## 3. Áp dụng Genetic Algorithm để giải game Reach the flag:
 <a name = "3a"></a>
 ### a. Khởi tạo quẩn thể (Creating Initial Population):
 - Khởi tạo quần thể (population) gồm các NST (chromosome) ban đầu là tập các bước di chuyển (r,l,u,d) với độ dài (chromosome_length) và độ lớn quần thể (population_size) cho trước.
