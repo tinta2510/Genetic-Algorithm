@@ -40,9 +40,11 @@ chromosome_length = 20
 population = []
 for i in range(population_size):
     chromosome = []
-for x in range(chromosome_length):
-    chromosome.append(random.choice(move_list))
-    population.append(chromosome)
+    for x in range(chromosome_length):
+        chromosome.append(random.choice(move_list))
+        population.append(chromosome)
+#Kết quả thu được: 
+#chromosome1 = ['d', 'l', 'u', 'u', 'l', 'l', 'l', 'l', 'r', 'l', 'd', 'r', 'u', 'd', 'u', 'd', 'u', 'd', 'r', 'r'] 
 ```
 b) Đánh giá độ phù hợp (Evaluate fitness): 
 - Sau khi đã khởi tạo quần thể, cho các chromosome chạy thử trên map. Sau đó, đánh giá độ phù hợp bằng cách cộng tổng số điểm của các ô còn lại trên map (match) với khoảng cách (distance) từ con trỏ (a,b) tới vị trí đích (a0,b0). Điểm số càng cao thì fitness càng thấp.
