@@ -134,7 +134,7 @@ return fitness_scores
 ```
 <a name = "3c"></a>
 ### c) Chọn lọc (Selection):  
-* Lựa chọn choromosome thế hệ bố-mẹ (select_parents): Chọn những chromosome có độ phù hợp cao nhất (result có điểm thấp nhất) để làm bố mẹ. Số chromosome bố-mẹ tùy thuộc vào hyperparameter parents_number.
+* Sử dụng toán tử chọn lọc xếp hạng: Chọn những chromosome có độ phù hợp cao nhất (result có điểm thấp nhất) để làm bố mẹ. Số chromosome bố-mẹ tùy thuộc vào hyperparameter parents_number.
 ```sh
 def select_parents(fitness_scores):
     parents_list = []
