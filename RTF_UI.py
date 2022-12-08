@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 6
+round = 12
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
