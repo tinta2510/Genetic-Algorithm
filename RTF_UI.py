@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 12
+round = 9
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
@@ -52,6 +52,14 @@ match round:
         #Initial position:
         a1 = 5
         b1 = 3
+    case 9: 
+        map_game = [[0,0,1,1,0,1,1,0,0],[0,1,2,1,1,2,1,0,0],[1,2,1,1,2,1,0,1,1],[0,1,1,1,1,1,1,2,1],[0,0,0,0,1,1,1,1,0],[0,0,0,0,0,0,5,0,0]] #a=0,b=2
+        #Flag:
+        a0 = 6
+        b0 = 5
+        #Initial position:
+        a1 = 0
+        b1 = 2
     case 12: 
         map_game = [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
         #Flag:
@@ -73,9 +81,9 @@ if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 move_list = ['r','l','u','d']
 elite_size = 4
 chromosome_length = 0
-
 population_size = 25
 parents_number = 12
+mutation_rate = 0.3
 
 for i in map_game: 
     for j in i: 
@@ -100,7 +108,7 @@ def fitness(population):
         map = copy.deepcopy(map_game)
         result = []
         match = 0 
-        distance = 0 
+        distance = 0 #Distance between the last position of player and flag
         for i in chromosome: 
             if i == 'u': 
                 b+= 1
@@ -188,7 +196,7 @@ def create_children(parents): #parents = select_parents(fitness_scores)
 
 def mutation(children): 
     for i in range(len(children)):
-        if random.random() > 0.3:
+        if random.random() > mutation_rate:
             continue
         else:
             mutated_position = int(random.random() * chromosome_length) #Mutated position
@@ -209,13 +217,12 @@ while True:
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 100000:
+    if generation == 120000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         solution = solution[0]
         print("Best way coud be found for round {}: {}, fitness_score: {}".format(round,solution,mark[0]))
-        #sys.exit()
         break
 
 #Print Solution: 
@@ -224,14 +231,15 @@ b=b1
 map = copy.deepcopy(map_game)
 i=0
 while True:
+    if i >= len(solution): break
     if solution[i] == 'u': 
         b+= 1
-        if (b > len(map)-1): 
-            b-= 1
+        if (b >= len(map)): 
+            b -= 1
             solution.pop(i)
             continue
         if map[b][a] == 0: 
-            b-= 1
+            b -= 1
             solution.pop(i)
             continue
         if map[b][a] == 1: map[b][a] -= 1
@@ -239,19 +247,19 @@ while True:
     elif solution[i] == 'd': 
         b-= 1
         if (b<0):
-            b+= 1
+            b += 1
             solution.pop(i) 
             continue
         if map[b][a] == 0: 
-            b+= 1
+            b += 1
             solution.pop(i)
             continue
         if map[b][a] == 1: map[b][a] -= 1
         if map[b][a] == 2: map[b][a] -= 1        
     elif solution[i] == 'r': 
         a+= 1
-        if (a > len(map[0])-1): 
-            a-= 1 
+        if (a >= len(map[0])): 
+            a -= 1 
             solution.pop(i)
             continue
         if map[b][a] == 0: 
@@ -261,21 +269,21 @@ while True:
         if map[b][a] == 1: map[b][a] -= 1
         if map[b][a] == 2: map[b][a] -= 1  
     elif solution[i] == 'l':  
-        a-= 1
+        a -= 1
         if (a<0): 
             a+= 1 
             solution.pop(i)
             continue
         if map[b][a] == 0: 
-            a+= 1
+            a += 1
             solution.pop(i)
             continue
         if map[b][a] == 1: map[b][a] -= 1
         if map[b][a] == 2: map[b][a] -= 1  
     i+=1
-    if i >= len(solution)-2: break
-    
+
 print("Move = {}".format(solution))
+
 print('\a')
 #Build UI:
 map = copy.deepcopy(map_game)

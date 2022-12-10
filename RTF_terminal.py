@@ -1,5 +1,5 @@
 import random,time,copy
-round = 12
+round = 5
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
@@ -49,6 +49,14 @@ match round:
         #Initial position:
         a1 = 5
         b1 = 3
+    case 9: 
+        map_game = [[0,0,1,1,0,1,1,0,0],[0,1,2,1,1,2,1,0,0],[1,2,1,1,2,1,0,1,1],[0,1,1,1,1,1,1,2,1],[0,0,0,0,1,1,1,1,0],[0,0,0,0,0,0,5,0,0]] #a=0,b=2
+        #Flag:
+        a0 = 6
+        b0 = 5
+        #Initial position:
+        a1 = 0
+        b1 = 2
     case 12: 
         map_game = [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
         #Flag:
@@ -57,6 +65,14 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 3
+    case 13: 
+        map_game = [[0,0,0,0,5,0,0,0],[0,0,0,0,1,1,0,0],[0,0,0,0,1,2,1,0],[0,1,1,0,1,2,2,0],[1,2,2,1,1,0,1,0],[0,1,2,1,1,0,2,1],[0,0,1,2,1,0,2,1],[0,0,0,1,1,1,1,0],[0,0,0,0,1,1,0,0]] #a=0,b=4
+        #Flag:
+        a0 = 4
+        b0 = 0
+        #Initial position:
+        a1 = 0
+        b1 = 4
 
 if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
@@ -65,6 +81,7 @@ elite_size = 5
 chromosome_length = 0
 population_size = 30
 parents_number = 15
+mutation_rate = 0.3
 
 for i in map_game: 
     for j in i: 
@@ -89,7 +106,7 @@ def fitness(population):
         map = copy.deepcopy(map_game)
         result = []
         match = 0 
-        distance = 0 
+        distance = 0 #Distance between the last position of player and flag
         for i in chromosome: 
             if i == 'u': 
                 b+= 1
@@ -177,7 +194,7 @@ def create_children(parents): #parents = select_parents(fitness_scores)
 
 def mutation(children): 
     for i in range(len(children)):
-        if random.random() > 0.3:
+        if random.random() > mutation_rate:
             continue
         else:
             mutated_position = int(random.random() * chromosome_length) #Vị trí xảy ra đột biến
@@ -189,8 +206,8 @@ t0 = time.time()
 while True:
     fitness_scores = fitness(population)
     if min([i[1] for i in fitness_scores]) == 0:
-        a = [i[0] for i in fitness_scores if i[1] == 0][0] 
-        print("Discovered solution for round {} = {}".format(round,))
+        solution = [i[0] for i in fitness_scores if i[1] == 0][0] 
+        print("Discovered solution for round {} = {}".format(round,solution))
         print("In {} generations and {} seconds".format(generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) 
