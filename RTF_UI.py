@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 9
+round = 12
 match round:
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
@@ -76,14 +76,38 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 4
+    case 14: 
+        map_game = [[0,0,1,1,0,0,0,0,0],[0,0,1,2,1,1,1,2,1],[1,1,1,1,1,0,1,2,1],[0,0,1,2,1,3,1,1,1],[0,0,0,2,1,0,1,0,0],[0,0,0,1,2,1,1,0,0],[0,0,0,0,5,0,0,0,0]] #a=0,b=2
+        #Flag:
+        a0 = 4
+        b0 = 6
+        #Initial position: 
+        a1 = 0 
+        b1 = 2
+    case 15: 
+        map_game = [[0,0,1,1,1],[1,1,1,5,1],[1,1,1,2,2],[1,2,3,2,1],[1,1,0,1,0],[1,1,1,1,0],[0,1,2,1,0]] #a=2,b=3
+        #Flag: 
+        a0 = 3
+        b0 = 1
+        #Initial position:
+        a1 = 2
+        b1 = 3
+    case 16:
+        map_game = [[0,0,0,0,1,2,1,1,0],[0,0,0,1,1,2,1,2,0],[0,1,1,1,2,1,0,2,5],[1,1,2,1,2,1,0,1,0],[0,0,2,0,0,2,1,1,0],[0,0,2,2,1,2,1,0,0],[0,0,0,1,1,1,1,0,0],[0,0,0,0,1,1,0,0,0]] #a=0,b=3
+        #Flag: 
+        a0 = 8 
+        b0 = 2
+        #Initial position: 
+        a1 = 0 
+        b1 = 3
 if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
 move_list = ['r','l','u','d']
-elite_size = 4
+elite_size = 5
 chromosome_length = 0
-population_size = 25
-parents_number = 12
-mutation_rate = 0.3
+population_size = 40
+parents_number = 25
+mutation_rate = 0.6
 
 for i in map_game: 
     for j in i: 
@@ -157,13 +181,13 @@ def fitness(population):
         distance = abs(a0-a) + abs(b0-b)
         result = [chromosome,match+distance]
         fitness_scores.append(result)
-    return fitness_scores
-
+    return fitness_scores 
+    
 def select_parents(fitness_scores):
     parents_list = []
     for chromosome in sorted(fitness_scores,key = lambda x: x[1])[:parents_number]:
         parents_list.append(chromosome[0])
-    return(parents_list)
+    return(parents_list) 
 
 def crossover(parent1,parent2):
     child = []
@@ -197,7 +221,11 @@ def create_children(parents): #parents = select_parents(fitness_scores)
 def mutation(children): 
     for i in range(len(children)):
         if random.random() > mutation_rate:
-            continue
+            swap_position1 = int(random.random() * chromosome_length)
+            swap_position2 = int(random.random() * chromosome_length)
+            t = children[i][swap_position1]
+            children[i][swap_position1] = children[i][swap_position2] 
+            children[i][swap_position2] = t
         else:
             mutated_position = int(random.random() * chromosome_length) #Mutated position
             mutation = random.choice(move_list) 
@@ -209,7 +237,7 @@ while True:
     fitness_scores = fitness(population)
     if min([i[1] for i in fitness_scores]) == 0:
         solution = [i[0] for i in fitness_scores if i[1] == 0][0] 
-        print("Discovered solution for round {} = {}".format(round,solution))
+        #print("Discovered solution for round {} = {}".format(round,solution))
         print("Solved at generation {},in {} seconds".format(generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất

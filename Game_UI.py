@@ -2,11 +2,11 @@ import pygame,sys
 from pygame.locals import *
 import time 
 
-map = [[0,0,0,0,5,0,0,0],[0,0,0,0,1,1,0,0],[0,0,0,0,1,2,1,0],[0,1,1,0,1,2,2,0],[1,2,2,1,1,0,1,0],[0,1,2,1,1,0,2,1],[0,0,1,2,1,0,2,1],[0,0,0,1,1,1,1,0],[0,0,0,0,1,1,0,0]] #a=0,b=4
+map =  [[0,0,1,1,1],[1,1,1,5,1],[1,1,1,2,2],[1,2,3,2,1],[1,1,0,1,0],[1,1,1,1,0],[0,1,2,1,0]] #a=2,b=3
 #Initial position:
-a1 = 0
-b1 = 4
-solution = ['r', 'u', 'r', 'r', 'r', 'd', 'l', 'l', 'l', 'd', 'r', 'u', 'u', 'u', 'r', 'r', 'l', 'u', 'r', 'u', 'r', 'd', 'r', 'd', 'd', 'r', 'u', 'l', 'd', 'd', 'd', 'l', 'r', 'd', 'l', 'd', 'u', 'u', 'l', 'd', 'd', 'd']
+a1 = 2
+b1 = 3
+solution = ['r', 'u', 'u', 'l', 'u', 'r', 'l', 'l', 'd', 'l', 'd', 'r', 'd', 'l', 'd', 'd', 'r', 'u', 'u', 'r', 'd', 'd', 'd', 'r', 'r', 'u', 'u', 'u', 'd', 'l', 'u', 'd', 'd']
 size = 70 #block_size
 WINDOWHEIGHT = len(map)*size
 WINDOWWIDTH  = len(map[0])*size
@@ -22,7 +22,7 @@ GRAY    = (169, 169, 169)
 
 pygame.init() 
 
-FPS = 1
+FPS = 0.75
 fpsClock = pygame.time.Clock()
 
 DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
@@ -58,8 +58,8 @@ while True:
     else: 
         time.sleep(3)
         break    
-    if map[b][a] == 1: map[b][a] = 0
-    elif map[b][a] == 2: map[b][a] = 1
+    if map[b][a] == 1: map[b][a] -= 1
+    elif map[b][a] == 2: map[b][a] -= 1
     if solution[k] == 'r': 
         x += size
         a += 1 
