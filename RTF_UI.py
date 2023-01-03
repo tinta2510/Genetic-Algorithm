@@ -2,8 +2,25 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 12
+round = 11
 match round:
+    case 1:
+        map_game = [[1],[1],[1],[1],[1],[5]]
+        #Flag:
+        a0 = 0
+        b0 = 5
+        #Initial position:
+        a1 = 0
+        b1 = 0
+    case 2: 
+        map_game = [[1,1,1,1,1,5]]
+        #Flag:
+        a0 = 5
+        b0 = 0
+        #Initial position:
+        a1 = 0
+        b1 = 0
+
     case 3:
         map_game = [[1,1,1,1,1,1,5],[0,0,0,0,0,1,1]] #a=0,b=0
         #Flag:
@@ -60,6 +77,22 @@ match round:
         #Initial position:
         a1 = 0
         b1 = 2
+    case 10: 
+        map_game = [[0,1,0,0,0,0],[0,1,0,0,0,0],[0,1,0,0,0,0],[1,2,1,0,0,0],[1,2,3,1,1,5],[0,1,1,0,0,0]]
+        #Flag:
+        a0 = 5
+        b0 = 4
+        #Initial position:
+        a1 = 1
+        b1 = 0
+    case 11: 
+        map_game = [[0,0,5,0],[0,0,1,0],[1,1,1,1],[1,2,1,1],[1,2,2,1],[1,2,1,0],[0,1,0,0]]
+        #Flag:
+        a0 = 2
+        b0 = 0
+        #Initial position:
+        a1 = 1
+        b1 = 6        
     case 12: 
         map_game = [[0,0,0,5,0,0],[0,0,1,1,0,0],[0,1,2,1,1,0],[1,2,2,1,1,0],[1,2,1,0,1,1],[1,1,1,1,1,1],[0,0,1,2,2,1],[0,0,0,1,1,0]] #a=0,b=3
         #Flag:
