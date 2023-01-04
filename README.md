@@ -34,7 +34,7 @@ def mutation(children):
 => Cách mutation này chưa làm tốt việc duy trì độ đa dạng cho quần thể.
   + Với cách mới: để tìm ra kết quả chương trình mất TB **10.000 generations, 21,37 giây**. Fitness value của các chromosome trong population có độ phân tán khá cao -> độ đa dạng lớn.
 
-##2. Cập nhật fitness_function: 
+## 2. Cập nhật fitness_function: 
 - Fitness_value sẽ được cộng thêm điểm void (những gene không di chuyển được), tức là một chromosome có càng nhiều gene không di chuyển được (gene thừa) thì fitness value càng thấp. 
 ```sh
 def fitness(population):
