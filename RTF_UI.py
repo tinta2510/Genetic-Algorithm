@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 8
+round = 16
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]
@@ -184,11 +184,11 @@ def fitness(population):
             if i == 'd': 
                 b -= 1
                 if (b<0):
-                    b += void_mark 
+                    b += 1 
                     void += void_mark
                     continue
                 if map[b][a] == 0: 
-                    b += void_mark
+                    b += 1
                     void += void_mark
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
