@@ -1,5 +1,5 @@
 import random,time,copy
-round = 5
+round = 8
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]

@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 11
+round = 8
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]
@@ -141,6 +141,7 @@ chromosome_length = 0
 population_size = 40
 parents_number = 25
 mutation_rate = 0.6
+void_mark = 1
 
 for i in map_game: 
     for j in i: 
@@ -165,45 +166,54 @@ def fitness(population):
         map = copy.deepcopy(map_game)
         result = []
         match = 0 
+        void = 0
         distance = 0 #Distance between the last position of player and flag
         for i in chromosome: 
             if i == 'u': 
-                b+= 1
+                b += 1
                 if (b > len(map)-1): 
-                    b-= 1 
+                    b -= 1 
+                    void += void_mark
                     continue
                 if map[b][a] == 0: 
-                    b-= 1
+                    b -= 1
+                    void += void_mark
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
             if i == 'd': 
-                b-= 1
+                b -= 1
                 if (b<0):
-                    b+= 1 
+                    b += void_mark 
+                    void += void_mark
                     continue
                 if map[b][a] == 0: 
-                    b+= 1
+                    b += void_mark
+                    void += void_mark
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
             if i == 'r': 
-                a+= 1
+                a += 1
                 if (a > len(map[0])-1): 
-                    a-= 1 
+                    a -= 1 
+                    void += void_mark
                     continue
                 if map[b][a] == 0: 
-                    a-= 1
+                    a -= 1
+                    void += void_mark
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1
             if i == 'l':  
-                a-= 1
+                a -= 1
                 if (a<0): 
-                    a+= 1 
+                    a += 1 
+                    void += void_mark
                     continue
                 if map[b][a] == 0: 
-                    a+= 1
+                    a += 1
+                    void += void_mark
                     continue
                 if map[b][a] == 1: map[b][a] -= 1
                 if map[b][a] == 2: map[b][a] -= 1  
@@ -212,7 +222,8 @@ def fitness(population):
                 if x==1: match += 1
                 if x==2: match += 2
         distance = abs(a0-a) + abs(b0-b)
-        result = [chromosome,match+distance]
+        if (match+distance) == 0: result = [chromosome,match+distance]
+        else: result = [chromosome,match+distance+void]
         fitness_scores.append(result)
     return fitness_scores 
     
@@ -278,7 +289,7 @@ while True:
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 120000:
+    if generation == 100000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
