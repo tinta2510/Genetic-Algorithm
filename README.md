@@ -1,4 +1,9 @@
 # Một số thay đổi để tăng tốc độ tìm lời giải 
+### Mục lục:
+[1. Thay đổi cách Mutation:](#1)
+
+[2. Cập nhật fitness_function:](#2)
+<a name = "1"></a>
 ## 1. Thay đổi cách Mutation:  
 - Sử dụng kết hợp Swap mutation và random resetting thay vì chỉ random resetting như trước.
 + Cách mutation mới: 
@@ -33,7 +38,7 @@ def mutation(children):
   + Với cách cũ: để tìm ra kết quả chương trình mất TB **34.000 generations, 78 giây**. Em nhận thấy với cách mutation cũ, population nhanh chóng đạt fitness value có giá trị cao (2-4). Tuy nhiên, khi đạt giá trị fitness_value từ 2-4, population **mất đi độ đa dạng**, parents được chọn ra có cùng fitness_value dao động quanh số 2 --> chương trình **mắc kẹt** ở fitness_value = 2 và chạy rất lâu đề tìm kết quả.
 => Cách mutation này chưa làm tốt việc duy trì độ đa dạng cho quần thể.
   + Với cách mới: để tìm ra kết quả chương trình mất TB **10.000 generations, 21,37 giây**. Fitness value của các chromosome trong population có độ phân tán khá cao -> độ đa dạng lớn.
-
+<a name = "2"></a>
 ## 2. Cập nhật fitness_function: 
 - Fitness_value sẽ được cộng thêm điểm void (những gene không di chuyển được), tức là một chromosome có càng nhiều gene không di chuyển được (gene thừa) thì fitness value càng thấp. 
 ```sh
