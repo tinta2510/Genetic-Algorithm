@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 16
+round = 14 #Round 1-18 #Cannot solve round 16   17?
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]
@@ -54,7 +54,7 @@ match round:
         a1 = 0
         b1 = 2
     case 7: 
-        map_game = [[0,0,1,1,0,0],[0,0,1,1,0,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,1,1,1,1],[0,0,1,1,1,1],[0,0,5,1,0,0]] #a=2,b=5
+        map_game = [[0,0,1,1,0,0],[0,0,1,1,0,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,0,1,1,1,1],[0,0,5,1,0,0]] #a=2,b=5
         #Flag:
         a0 = 2
         b0 = 5 
@@ -133,6 +133,22 @@ match round:
         #Initial position: 
         a1 = 0 
         b1 = 3
+    case 17: 
+        map_game = [[0,0,0,0,2,2,0],[0,0,0,0,2,2,0],[0,1,1,1,2,1,0],[1,2,1,2,3,1,1],[2,3,0,0,1,2,1],[1,1,1,1,0,2,1],[0,0,2,2,1,1,5],[0,0,1,0,1,1,0]]
+        #Flag: 
+        a0 = 6 
+        b0 = 6
+        #Initial position: 
+        a1 = 0 
+        b1 = 5   
+    case 18: 
+        map_game = [[0,0,0,1,1,0,0],[0,0,0,1,2,1,1],[0,0,1,1,1,0,1],[5,1,1,1,1,0,1],[0,1,2,2,1,1,1],[0,0,1,2,1,1,0],[0,0,0,1,1,0,0],[0,0,0,0,1,0,0]]
+        #Flag: 
+        a0 = 0
+        b0 = 3
+        #Initial position: 
+        a1 = 4
+        b1 = 7
 if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
 move_list = ['r','l','u','d']
@@ -175,48 +191,48 @@ def fitness(population):
                     b -= 1 
                     void += void_mark
                     continue
-                if map[b][a] == 0: 
+                elif map[b][a] == 0: 
                     b -= 1
                     void += void_mark
                     continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'd': 
+                elif map[b][a] == 1: map[b][a] -= 1
+                elif map[b][a] == 2: map[b][a] -= 1
+            elif i == 'd': 
                 b -= 1
                 if (b<0):
                     b += 1 
                     void += void_mark
                     continue
-                if map[b][a] == 0: 
+                elif map[b][a] == 0: 
                     b += 1
                     void += void_mark
                     continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'r': 
+                elif map[b][a] == 1: map[b][a] -= 1
+                elif map[b][a] == 2: map[b][a] -= 1
+            elif i == 'r': 
                 a += 1
                 if (a > len(map[0])-1): 
                     a -= 1 
                     void += void_mark
                     continue
-                if map[b][a] == 0: 
+                elif map[b][a] == 0: 
                     a -= 1
                     void += void_mark
                     continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1
-            if i == 'l':  
+                elif map[b][a] == 1: map[b][a] -= 1
+                elif map[b][a] == 2: map[b][a] -= 1
+            elif i == 'l':  
                 a -= 1
                 if (a<0): 
                     a += 1 
                     void += void_mark
                     continue
-                if map[b][a] == 0: 
+                elif map[b][a] == 0: 
                     a += 1
                     void += void_mark
                     continue
-                if map[b][a] == 1: map[b][a] -= 1
-                if map[b][a] == 2: map[b][a] -= 1  
+                elif map[b][a] == 1: map[b][a] -= 1
+                elif map[b][a] == 2: map[b][a] -= 1  
         for y in range(len(map)):
             for x in map[y]:
                 if x==1: match += 1
@@ -282,14 +298,14 @@ while True:
     if min([i[1] for i in fitness_scores]) == 0:
         solution = [i[0] for i in fitness_scores if i[1] == 0][0] 
         #print("Discovered solution for round {} = {}".format(round,solution))
-        print("Solved at generation {},in {} seconds".format(generation,time.time() - t0))
+        print("Solved round {} at generation {},in {} seconds".format(round,generation,time.time() - t0))
         break
     parents = select_parents(fitness_scores) #Chọn ra cặp bó mẹ có điểm cao nhất
     children = create_children(parents) #Tạo thế hệ con từ parents
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 100000:
+    if generation == 50000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
