@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 14 #Round 1-18 #Cannot solve round 16   17?
+round = 12 #Round 1-19 
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]
@@ -149,6 +149,14 @@ match round:
         #Initial position: 
         a1 = 4
         b1 = 7
+    case 19: 
+        map_game = [[0,0,0,1,5,0],[0,0,1,1,0,0],[0,0,1,2,1,1],[1,1,1,2,1,1],[1,2,1,0,2,1],[1,1,1,2,2,1],[1,0,1,1,0,1],[1,1,1,0,1,1],[0,0,1,1,1,0],[0,0,1,1,0,0]]
+        #Flag: 
+        a0 = 4
+        b0 = 0
+        #Initial position: 
+        a1 = 3
+        b1 = 5
 if (map_game[b1][a1] == 1) or (map_game[b1][a1] == 2): map_game[b1][a1] -= 1
 
 move_list = ['r','l','u','d']
@@ -157,7 +165,7 @@ chromosome_length = 0
 population_size = 40
 parents_number = 25
 mutation_rate = 0.6
-void_mark = 1
+void_mark = 1.1
 
 for i in map_game: 
     for j in i: 
@@ -238,8 +246,8 @@ def fitness(population):
                 if x==1: match += 1
                 if x==2: match += 2
         distance = abs(a0-a) + abs(b0-b)
-        if (match+distance) == 0: result = [chromosome,match+distance]
-        else: result = [chromosome,match+distance+void]
+        if (match+distance) == 0: result = [chromosome , match + distance]
+        else: result = [chromosome , match + distance*1.7 + void]
         fitness_scores.append(result)
     return fitness_scores 
     
@@ -305,7 +313,7 @@ while True:
     population = mutation(children) #Quần thể sau đột biến
     generation += 1
     if generation % 5000 == 0: print("Running at generation {},time: {} seconds".format(generation,time.time() - t0))
-    if generation == 50000:
+    if generation == 15000:
         print("Break at generation {},in {} seconds".format(generation,time.time() - t0))
         solution = [i[0] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
         mark = [i[1] for i in sorted(fitness_scores,key = lambda x: x[1])[:1]]
@@ -390,7 +398,7 @@ GRAY    = (169, 169, 169)
 
 pygame.init() 
 
-FPS = 1.25
+FPS = 1.5
 fpsClock = pygame.time.Clock()
 
 DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
