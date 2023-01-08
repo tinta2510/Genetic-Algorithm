@@ -377,12 +377,12 @@ def new_gen(parents_list):
 def create_mutation(new_gen):
     for i in range(para_pop_size): 
         number = random.randint(0,para_pop_size-1)
-        new_gen[number][0] += round(random.randint(-new_gen[number][0]//2,new_gen[number][0]//2),-1)
-        new_gen[number][1] += round(random.randint(-new_gen[number][1]//2,new_gen[number][1]//2),-1)
+        new_gen[number][0] += round(random.randint(-new_gen[number][0],new_gen[number][0]),-1)
+        new_gen[number][1] += round(random.randint(-new_gen[number][1],new_gen[number][1]),-1)
 
         while (new_gen[number][1]<10) or (new_gen[number][1] > new_gen[number][0]*1.2):
-            while (new_gen[number][1]<10): new_gen[number][1] += round(random.randint(10,50),-1)
-            while  (new_gen[number][1]>new_gen[number][0]*1.2): new_gen[number][1] -= round(random.ranint(10,50),-1)
+            while (new_gen[number][1]<10): new_gen[number][1] += round(random.randint(10, new_gen[number][0]),-1)
+            while  (new_gen[number][1]>new_gen[number][0]*1.2): new_gen[number][1] -= round(random.ranint(10, new_gen[number][0]),-1)
     return new_gen
     
 print('Initial parameter_population: ')
@@ -393,7 +393,7 @@ for i in range(10): ##
     parents_list = select(result)
     new_geneneration = new_gen(parents_list)
     para_pop = create_mutation(new_geneneration) 
-    print('Parameter_population {}:'.format(i+1))
+    print('population{}:'.format(i+1))
     print(evaluate_para_pop_fitness(para_pop))
     print("time: ",time.time()-t,'\n')
     
