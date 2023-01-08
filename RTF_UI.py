@@ -2,7 +2,7 @@ import random
 import time,copy
 import pygame,sys
 from pygame.locals import *
-round = 12 #Round 1-19 
+round = 7 #Round 1-19 
 match round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]

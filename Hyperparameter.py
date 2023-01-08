@@ -1,13 +1,13 @@
 import random
 import time,copy
+import numpy as np 
 
 para_pop=[] #parameter_population
 para_pop_size = 10 #parameter_population_size
 
-pop_size_max = 200 #population_size_max
+pop_size_max = 300 #population_size_max
 n_time = 3 #number of times to run a CHROMOSOME
 para_parents_num = 4
-
 
 
 
@@ -179,8 +179,10 @@ for i in map_game:
 
 #Initial_PARAMETER_population:
 for i in range(para_pop_size): 
-   pop_size = random.randint(20,pop_size_max)
-   lis = [pop_size,random.randint(10,pop_size)]
+   #pop_size = (random.randint(20,pop_size_max)//10)*10
+   pop_size = random.choice(np.arange(20,pop_size_max,10))
+   parents_num = random.choice(np.arange(10,pop_size,10))
+   lis = [pop_size,parents_num]
    para_pop.append(lis)
 
 #RTF_Find_optimal_parameter_function:
@@ -267,7 +269,7 @@ def run_parameter_population(lis):
                     if x==2: match += 2
             distance = abs(a0-a) + abs(b0-b)
             if (match+distance) == 0: result = [chromosome , match + distance]
-            else: result = [chromosome , match*1.5 + distance*1.25 + void]
+            else: result = [chromosome , match + distance + void]
             fitness_scores.append(result)
         return fitness_scores 
     
@@ -340,21 +342,25 @@ def evaluate_para_pop_fitness(para_pop):
         ave_gen = 0 #average_generation
         for i in range(n_time):
             ave_gen += run_parameter_population(chromosome)
-        ave_gen //= n_time
-        result.append([chromosome,ave_gen])
-    return result
+        ave_gen /= n_time
+        result.append([chromosome,round(ave_gen,2)])
+    return sorted(result,key = lambda x: x[1])
 
 def select(result): 
     parents_list = []
-    for chromosome in sorted(result,key = lambda x: x[1])[:para_parents_num]:
+    for chromosome in result[:para_parents_num]:
         parents_list.append(chromosome[0])
     return parents_list
 
 def para_crossover(parent1,parent2):
     rate = random.random()
     child = []
-    new_pop_num = int(parent1[0]*rate + parent2[0]*(1-rate))
-    new_parent_num = int(parent2[1]*rate + parent1[1]*(1-rate))
+    new_pop_num = round(int(parent1[0]*rate + parent2[0]*(1-rate)),-1)
+    new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
+
+    #While new_parent_num is too small or bigger than new_pop_num, recreate new_parent_num:
+    while (new_parent_num<10) or (new_parent_num > new_pop_num*1.2): 
+        new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
 
     child.append(new_pop_num)
     child.append(new_parent_num)
@@ -371,17 +377,24 @@ def new_gen(parents_list):
 def create_mutation(new_gen):
     for i in range(para_pop_size): 
         number = random.randint(0,para_pop_size-1)
-        new_gen[number][0] += random.randint(-new_gen[number][0]//2,new_gen[number][0]//2)
-        new_gen[number][1] += random.randint(-new_gen[number][1]//2,new_gen[number][1]//2)
-    return para_pop
+        new_gen[number][0] += round(random.randint(-new_gen[number][0]//2,new_gen[number][0]//2),-1)
+        new_gen[number][1] += round(random.randint(-new_gen[number][1]//2,new_gen[number][1]//2),-1)
 
+        while (new_gen[number][1]<10) or (new_gen[number][1] > new_gen[number][0]*1.2):
+            while (new_gen[number][1]<10): new_gen[number][1] += round(random.randint(10,50),-1)
+            while  (new_gen[number][1]>new_gen[number][0]*1.2): new_gen[number][1] -= round(random.ranint(10,50),-1)
+    return new_gen
+    
+print('Initial parameter_population: ')
+print(evaluate_para_pop_fitness(para_pop),'\n')
 for i in range(10): ##
     t = time.time()
     result = evaluate_para_pop_fitness(para_pop)
     parents_list = select(result)
     new_geneneration = new_gen(parents_list)
     para_pop = create_mutation(new_geneneration) 
-    print(evaluate_para_pop_fitness(select(evaluate_para_pop_fitness(para_pop))))
+    print('Parameter_population {}:'.format(i+1))
+    print(evaluate_para_pop_fitness(para_pop))
     print("time: ",time.time()-t,'\n')
     
 

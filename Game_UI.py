@@ -2,7 +2,7 @@ import pygame,sys
 from pygame.locals import *
 import time 
 
-round = 15 #Round 1-18 #Cannot solve round 7,15,16   17?
+round = 5 #Round 1-18 #Cannot solve round 7,15,16   17?
 match round:
     case 1:
         map = [[1],[1],[1],[1],[1],[5]]
