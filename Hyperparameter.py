@@ -12,8 +12,8 @@ para_parents_num = 4
 
 
 #Round: 
-round = 6
-match round:
+Round = 5
+match Round:
     case 1:
         map_game = [[1],[1],[1],[1],[1],[5]]
         #Flag:
@@ -179,7 +179,6 @@ for i in map_game:
 
 #Initial_PARAMETER_population:
 for i in range(para_pop_size): 
-   #pop_size = (random.randint(20,pop_size_max)//10)*10
    pop_size = random.choice(np.arange(20,pop_size_max,10))
    parents_num = random.choice(np.arange(10,pop_size,10))
    lis = [pop_size,parents_num]
@@ -196,7 +195,7 @@ def run_parameter_population(lis):
 
     #Initial population:
     population = []
-    for i in range(population_size):
+    for i in range(int(population_size)):
         chromosome = []
         for x in range(chromosome_length):
             chromosome.append(random.choice(move_list))
@@ -331,8 +330,8 @@ def run_parameter_population(lis):
         children = create_children(parents) #Tạo thế hệ con từ parents
         population = mutation(children) #Quần thể sau đột biến
         generation += 1
-        if generation == 50000:
-            generation += 10000
+        if generation == 15000:
+            generation += 15000
             break
     return generation
 
@@ -355,15 +354,16 @@ def select(result):
 def para_crossover(parent1,parent2):
     rate = random.random()
     child = []
-    new_pop_num = round(int(parent1[0]*rate + parent2[0]*(1-rate)),-1)
-    new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
+    new_pop_num = round(parent1[0]*rate + parent2[0]*(1-rate),-1)
+    new_parents_num = round(parent1[1]*rate + parent2[1]*(1-rate),-1)
 
-    #While new_parent_num is too small or bigger than new_pop_num, recreate new_parent_num:
-    while (new_parent_num<10) or (new_parent_num > new_pop_num*1.2): 
-        new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
+    #While new_parents_num is too small or bigger than new_pop_num, recreate new_parents_num:
+    while (new_parents_num<10) or (new_parents_num*1.1 > new_pop_num): 
+        if (new_parents_num<10): new_parents_num += 10
+        elif (new_parents_num*1.1 > new_pop_num): new_parents_num -= 10
 
-    child.append(new_pop_num)
-    child.append(new_parent_num)
+    child.append(int(new_pop_num))
+    child.append(int(new_parents_num))
     return child
 
 def new_gen(parents_list):
@@ -374,20 +374,20 @@ def new_gen(parents_list):
         new_gen.append(para_crossover(parent1,parent2))
     return new_gen 
 
-def create_mutation(new_gen):
-    for i in range(para_pop_size): 
-        number = random.randint(0,para_pop_size-1)
-        new_gen[number][0] += round(random.randint(-new_gen[number][0],new_gen[number][0]),-1)
-        new_gen[number][1] += round(random.randint(-new_gen[number][1],new_gen[number][1]),-1)
-
-        while (new_gen[number][1]<10) or (new_gen[number][1] > new_gen[number][0]*1.2):
-            while (new_gen[number][1]<10): new_gen[number][1] += round(random.randint(10, new_gen[number][0]),-1)
-            while  (new_gen[number][1]>new_gen[number][0]*1.2): new_gen[number][1] -= round(random.ranint(10, new_gen[number][0]),-1)
+def create_mutation(new_gen): 
+    for i in new_gen: 
+        if (random.random() > 0.5):
+            i[0] += random.choice(np.arange(-50,50,10))
+            i[1] += random.choice(np.arange(-50,50,10))
+        else: continue
+        while (i[1]<10) or (i[1]*1.1 > i[0]): 
+            if (i[1]<10): i[1] += 10
+            elif (i[1]*1.1 > i[0]): i[1] -= 10
     return new_gen
-    
+
 print('Initial parameter_population: ')
 print(evaluate_para_pop_fitness(para_pop),'\n')
-for i in range(10): ##
+for i in range(10): 
     t = time.time()
     result = evaluate_para_pop_fitness(para_pop)
     parents_list = select(result)
