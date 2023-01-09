@@ -27,24 +27,34 @@ for i in range(para_pop_size):
 
 <a name = '3'></a>
 ## 3. Chọn lọc (Selection):  Sử dụng *Rank selection*
-- Sắp xếp các Chromosome theo thứ tự *fitness_value* tăng dần (số ***generation*** giảm dần).
-- Sau đó, chọn những chromosome có *fitness_value* cao nhất để thêm vào parents_list.
+- Sắp xếp các *Chromosome* theo thứ tự *fitness_value* tăng dần (số ***generation*** giảm dần).
+- Sau đó, chọn những *chromosome* có *fitness_value* cao nhất để thêm vào *parents_list*.
 
 <a name = '4'></a>
 ## 4. Sinh sản (Crossover):
-- Chọn bất kỳ 2 parents trong parents_list. Sau đó, chọn một số rate bất kỳ trong đoạn từ [0,1]. 
-- 
-
+- Chọn bất kỳ *parent1* và *parent2* trong *parents_list*. Sau đó, chọn một tỉ lệ *rate* bất kỳ trong đoạn từ [0,1]. 
+- Sau đó, tạo ra *chromosome con* với *population_size* và *parents_num* mới bằng cách cộng *population_size* và *parents_num* của *parent1* và *parent2* theo tỉ lệ *rate*.
+- Ví dụ: 
+```sh
+rate = 0.6 #rate = random.random()
+parent1 = [200,50] # [population_size,parents_num]
+parent2 = [150,75]
+new_pop_size = 200*0.6 + 150*0.4
+new_parent_num = 50*0.4 + 75*0.6
+child = [new_pop_size,new_parents_num]
+```
+- Code: 
 ```sh
 def para_crossover(parent1,parent2):
     rate = random.random()
     child = []
-    new_pop_num = round(int(parent1[0]*rate + parent2[0]*(1-rate)),-1)
-    new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
+    new_pop_num = round(parent1[0]*rate + parent2[0]*(1-rate),-1)
+    new_parent_num = round(parent2[1]*rate + parent1[1]*(1-rate),-1)
 
     #While new_parent_num is too small or bigger than new_pop_num, recreate new_parent_num:
-    while (new_parent_num<10) or (new_parent_num > new_pop_num*1.2): 
-        new_parent_num = round(int(parent2[1]*rate + parent1[1]*(1-rate)),-1)
+    while (new_parent_num<10) or (new_parent_num*1.1 > new_pop_num): 
+        rate = random.random()
+        new_parent_num = round(parent2[1]*rate + parent1[1]*(1-rate),-1)
 
     child.append(new_pop_num)
     child.append(new_parent_num)
@@ -61,3 +71,14 @@ def new_gen(parents_list):
 
 <a name = '5'></a>
 ## 5. Gây đột biến (Mutation): 
+
+
+```sh
+def create_mutation(new_gen):
+    for i in range(para_pop_size): 
+        if (random.random() > 0.5):
+            new_gen[i][0] *= 1.5 - random.random()
+            new_gen[i][1] *= 1.5 - random.random()
+        else: continue
+    
+```
