@@ -11,7 +11,7 @@
 <a name = '1'></a>
 ## 1. Khởi tạo quần thể (Create initial_population): 
 - Mỗi Choromosome là 1 list bao gồm population_size và parents_number cho Genetics Agorithm RTF.
-- Ví dụ: [ [200,50] , [100,75] , [150,30] ]. Đây là một population gồm 3 chromosome. Choromosome đầu tiên chứa 2 giá trị là 200 (population_size) và 50 (parents_number). 
+- Ví dụ: ` [[200,50] , [100,75] , [150,30]] `. Đây là một population gồm 3 chromosome. Choromosome đầu tiên chứa 2 giá trị là 200 (*population_size*) và 50 (*parents_number*). 
 ```sh
 #Initial_PARAMETER_population:
 for i in range(para_pop_size): 
@@ -49,15 +49,10 @@ def para_crossover(parent1,parent2):
     rate = random.random()
     child = []
     new_pop_num = round(parent1[0]*rate + parent2[0]*(1-rate),-1)
-    new_parent_num = round(parent2[1]*rate + parent1[1]*(1-rate),-1)
+    new_parents_num = round(parent1[1]*rate + parent2[1]*(1-rate),-1)
 
-    #While new_parent_num is too small or bigger than new_pop_num, recreate new_parent_num:
-    while (new_parent_num<10) or (new_parent_num*1.1 > new_pop_num): 
-        rate = random.random()
-        new_parent_num = round(parent2[1]*rate + parent1[1]*(1-rate),-1)
-
-    child.append(new_pop_num)
-    child.append(new_parent_num)
+    child.append(int(new_pop_num))
+    child.append(int(new_parents_num))
     return child
 
 def new_gen(parents_list):
@@ -70,15 +65,15 @@ def new_gen(parents_list):
 ```
 
 <a name = '5'></a>
-## 5. Gây đột biến (Mutation): 
-
-
+## 5. Gây đột biến (Mutation):
+- Đối với mỗi *chromosome* trong tập *new_gen*, ta cho tỉ lệ xảy ra đột biến là 50%. 
+- Nếu đột biến xảy ra, *population_size* và *parents_number* của *chromosome* sẽ được thêm hoặc bớt một giá trị ngẫu nhiên trong khoảng từ (0,50).  
 ```sh
-def create_mutation(new_gen):
-    for i in range(para_pop_size): 
+def create_mutation(new_gen): 
+    for i in new_gen: 
         if (random.random() > 0.5):
-            new_gen[i][0] *= 1.5 - random.random()
-            new_gen[i][1] *= 1.5 - random.random()
+            i[0] += random.choice(np.arange(-50,50,10))
+            i[1] += random.choice(np.arange(-50,50,10))
         else: continue
-    
+    return new_gen
 ```
